@@ -28,7 +28,7 @@
         app:showSeekBarValue="true"
         app:smooth="true"/>
     <EditTextPreference
-        android:defaultValue="4"
+        android:defaultValue="6"
         android:key="scale"
         android:numeric="integer"
         android:selectAllOnFocus="true"

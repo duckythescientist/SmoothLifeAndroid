@@ -8,6 +8,7 @@
     <string name="about_smoothlife">
         SmoothLife is a generalization of Conway\'s Game of Life to a continuous domain originally
         presented in a research paper by Stephen Rafler:\nhttps://arxiv.org/abs/1111.1567\n\nThere are many implementations, but this one is (one of) mine. If you are so inclined,
-        I have a Python implementation here:\nhttps://github.com/duckythescientist/SmoothLife
+        I have a Python implementation here:\nhttps://github.com/duckythescientist/SmoothLife\n\n
+        The source for this app can be found at https://github.com/duckythescientist/SmoothLifeAndroid
     </string>
 </resources>
