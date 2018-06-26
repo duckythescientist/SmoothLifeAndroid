@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ColorMapChoice">
+        <item>Viridis</item>
+        <item>Gray</item>
+        <item>Jet</item>
+        <item>Cube-Helix</item>
+        <item>Parula</item>
+        <item>Seismic</item>
+
+    </string-array>
+</resources>

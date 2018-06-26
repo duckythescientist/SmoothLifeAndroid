@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SmoothLife</string>
+    <string name="title_activity_slpreferences">SmoothLife Preferences</string>
+    <string name="title_activity_set_wallpaper">SmoothLife</string>
+    <string name="reset_defaults">reset_defaults</string>
+    <string name="title_activity_about_page">AboutPage</string>
+
+    <string name="about_smoothlife">
+        SmoothLife is a generalization of Conway\'s Game of Life to a continuous domain originally
+        presented in a research paper by Stephen Rafler:\nhttps://arxiv.org/abs/1111.1567\n\nThere are many implementations, but this one is (one of) mine. If you are so inclined,
+        I have a Python implementation here:\nhttps://github.com/duckythescientist/SmoothLife
+    </string>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:key="reset_defaults"
+        android:onClick="resetPreferences"
+        android:title="Reset to Defaults" />
+    <EditTextPreference
+        android:defaultValue="100"
+        android:key="frame_delay"
+        android:numeric="integer"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Frame Delay (ms)" />
+
+    <ListPreference
+        android:defaultValue="Viridis"
+        android:entries="@array/ColorMapChoice"
+        android:entryValues="@array/ColorMapChoice"
+        android:key="color_map_choice"
+        android:title="Color Map" />
+    <ninja.duck.preference.SeekBarPreference
+        android:key="color_scaling"
+        android:title="Color Scaling"
+        android:summary="Sets the sharpness of color transition"
+        android:defaultValue="50"
+        app:showSeekBarValue="true"
+        app:smooth="true"/>
+    <EditTextPreference
+        android:defaultValue="4"
+        android:key="scale"
+        android:numeric="integer"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Scale" />
+    <EditTextPreference
+        android:defaultValue="7"
+        android:key="inner_radius"
+        android:numeric="integer"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Cell Inner Radius" />
+    <Preference
+        android:key="about_page"
+        android:title="About SmoothLife" />
+
+</PreferenceScreen>
