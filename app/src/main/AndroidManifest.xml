@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ninja.duck.smoothlife">
-
-    <uses-feature
-        android:name="android.software.live_wallpaper"
-        android:required="true" />
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.SmoothLife"
+        tools:targetApi="31">
         <service
             android:name=".SLWallpaperService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_WALLPAPER">
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
             </intent-filter>
@@ -28,23 +27,26 @@
         </service>
 
         <activity
-            android:name=".SLPreferencesActivity"
+            android:name=".SettingsActivity"
             android:exported="true"
             android:label="@string/title_activity_slpreferences"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.SmoothLife.NoActionBar" />
         <activity
-            android:name=".SetWallpaperActivity"
-            android:label="@string/title_activity_set_wallpaper">
+            android:name=".AboutPage"
+            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".SetWallpaperActivity"-->
+<!--            android:exported="false" />-->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AboutPage"
-            android:label="@string/title_activity_about_page"
-            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>
