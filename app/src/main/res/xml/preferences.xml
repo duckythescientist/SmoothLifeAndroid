@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
         android:key="reset_defaults"
@@ -8,10 +8,12 @@
         android:title="Reset to Defaults" />
     <EditTextPreference
         android:defaultValue="100"
+        android:inputType="number"
         android:key="frame_delay"
-        android:numeric="integer"
+        android:max="10000"
         android:selectAllOnFocus="true"
         android:singleLine="true"
+
         android:title="Frame Delay (ms)" />
 
     <ListPreference
@@ -20,27 +22,38 @@
         android:entryValues="@array/ColorMapChoice"
         android:key="color_map_choice"
         android:title="Color Map" />
-    <ninja.duck.preference.SeekBarPreference
-        android:key="color_scaling"
-        android:title="Color Scaling"
-        android:summary="Sets the sharpness of color transition"
-        android:defaultValue="50"
-        app:showSeekBarValue="true"
-        app:smooth="true"/>
+
+    <SeekBarPreference
+        app:defaultValue="50"
+        app:key="color_scaling"
+        app:title="Color Scaling"
+        app:showSeekBarValue="true" />
+
     <EditTextPreference
         android:defaultValue="6"
         android:key="scale"
-        android:numeric="integer"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Scale" />
+        android:title="Scale"
+        android:inputType="number" />
     <EditTextPreference
         android:defaultValue="7"
         android:key="inner_radius"
-        android:numeric="integer"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Cell Inner Radius" />
+        android:title="Cell Inner Radius"
+        android:inputType="number" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="smooth_timestepping"
+        android:title="Smooth Timestepping" />
+    <EditTextPreference
+        android:defaultValue="0.2"
+        android:key="timestep"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Timestep"
+        app:summary="Timestep 0-1 if using smooth timestepping" />
     <Preference
         android:key="about_page"
         android:title="About SmoothLife" />

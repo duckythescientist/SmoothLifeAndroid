@@ -6,93 +6,28 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import org.bytedeco.fftw.global.fftw3;
 import org.bytedeco.javacpp.DoublePointer;
-import org.bytedeco.javacpp.fftw3;
 
 import java.util.Random;
 
-import static java.lang.Math.PI;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
-
-
+import androidx.preference.PreferenceManager;
 
 public class SLWallpaperService extends WallpaperService {
-    private static final String TAG = "SLWallpaperService";
+    private static final String TAG = "WallpaperService";
 
-//    static {
-//        System.loadLibrary("fftw3");
-//        System.loadLibrary("fftw3f");
-//        System.loadLibrary("jnifftw3");
-//    }
-//
-//    static final int NUM_POINTS = 64;
-//
-//
-//    /* Never mind this bit */
-//
-//    static final int REAL = 0;
-//    static final int IMAG = 1;
-//
-//    static void acquire_from_somewhere(DoublePointer signal) {
-//        /* Generate two sine waves of different frequencies and amplitudes. */
-//
-//        double[] s = new double[(int)signal.capacity()];
-//        for (int i = 0; i < NUM_POINTS; i++) {
-//            double theta = (double)i / (double)NUM_POINTS * PI;
-//
-//            s[2 * i + REAL] = 1.0 * cos(10.0 * theta) +
-//                    0.5 * cos(25.0 * theta);
-//
-//            s[2 * i + IMAG] = 1.0 * sin(10.0 * theta) +
-//                    0.5 * sin(25.0 * theta);
-//        }
-//        signal.put(s);
-//    }
-//
-//    static void do_something_with(DoublePointer result) {
-//        double[] r = new double[(int)result.capacity()];
-//        result.get(r);
-//        for (int i = 0; i < NUM_POINTS; i++) {
-//            double mag = sqrt(r[2 * i + REAL] * r[2 * i + REAL] +
-//                    r[2 * i + IMAG] * r[2 * i + IMAG]);
-//
-//            System.out.println(mag);
-//        }
-//    }
-//
-//
-//    /* Resume reading here */
-//
-//    public static void main() {
-//        DoublePointer signal = new DoublePointer(2 * NUM_POINTS);
-//        DoublePointer result = new DoublePointer(2 * NUM_POINTS);
-//
-//        fftw3.fftw_plan plan = fftw3.fftw_plan_dft_1d(NUM_POINTS, signal, result,
-//                fftw3.FFTW_FORWARD, (int)fftw3.FFTW_ESTIMATE);
-//
-//        acquire_from_somewhere(signal);
-//        fftw3.fftw_execute(plan);
-//        do_something_with(result);
-//
-//        fftw3.fftw_destroy_plan(plan);
-//    }
-
+    public SLWallpaperService() {
+    }
 
     @Override
     public Engine onCreateEngine() {
-//        Log.d(TAG, "Running fftw3 test");
-//        main();
         Log.d(TAG, "Creating engine");
         return new SLWallpaperEngine();
     }
-
     private class SLWallpaperEngine extends Engine implements SharedPreferences.OnSharedPreferenceChangeListener {
         private boolean visible;
         int width;
@@ -123,6 +58,8 @@ public class SLWallpaperService extends WallpaperService {
         int color_scaling;
         int scale = 4;
         int frame_delay;
+        double dt;
+        double last_dt = -2;
         double inner_radius = 7.0;
         double outer_radius = 3*inner_radius;
 
@@ -209,7 +146,7 @@ public class SLWallpaperService extends WallpaperService {
                 }
             }
 
-            void s_fast(double dest[], double n_arr[], double m_arr[]) {
+            void s_fast(double dest[], double n_arr[], double m_arr[], double dt) {
                 for(int i=0; i<n_arr.length; i++) {
                     int n_ind = (int)(n_arr[i] * precalc_len + 0.5);
                     int m_ind = (int)(m_arr[i] * precalc_len + 0.5);
@@ -222,7 +159,59 @@ public class SLWallpaperService extends WallpaperService {
                     dest[i] = lookup[n_ind][m_ind];
                 }
             }
+        }
 
+        private class SmoothTimestepRules extends Rules {
+            double B1 = 0.254f;
+            double B2 = 0.340f;
+            double D1 = 0.312f;
+            double D2 = 0.518f;
+//
+//            double N = 0.028f;
+//            double M = 0.147f;
+//
+//            double lookup[][];
+//            int precalc_len;
+
+            double hard(double x, double a) {
+                return x > a ? 1.0f : 0.0f;
+            }
+
+            double sigma(double x, double a, double alpha) {
+                return x * (1.0 - hard(alpha, 0.5)) + a * hard(alpha, 0.5);
+            }
+
+            double linear(double x, double a, double ea) {
+                double val = (x - a) / ea + 0.5;
+                return  Math.min(Math.max(val, 0.0), 1.0);
+            }
+
+            double sigma2(double x, double a, double b) {
+                return linear(x, a, N) * (1.0 - linear(x, b, N));
+            }
+
+            double s(double n, double m) {
+                return sigma(sigma2(n, B1, D1), sigma2(n, B2, D2), m);
+            }
+
+            void s_fast(double dest[], double n_arr[], double m_arr[], double dt) {
+                for(int i=0; i<n_arr.length; i++) {
+                    int n_ind = (int)(n_arr[i] * precalc_len + 0.5);
+                    int m_ind = (int)(m_arr[i] * precalc_len + 0.5);
+                    // Constrain just in case
+                    if(n_ind >= precalc_len) n_ind = precalc_len - 1;
+                    if(n_ind < 0) n_ind = 0;
+                    if(m_ind >= precalc_len) m_ind = precalc_len - 1;
+                    if(m_ind < 0) m_ind = 0;
+
+                    double s = lookup[n_ind][m_ind];
+//                    double m = m_arr[i];
+                    double f = dest[i];
+                    double v =  f + dt * (s - f);
+                    dest[i] = Math.min(Math.max(v, 0.0), 1.0);
+
+                }
+            }
         }
 
         private class Multipliers {
@@ -348,6 +337,9 @@ public class SLWallpaperService extends WallpaperService {
             else if(key.equals("color_map_choice")) {
                 cmap = ColorMap.getColorMap(prefs.getString(key, "viridis"));
             }
+            else if(key.equals("smooth_timestepping")) {
+                reinit(true);
+            }
             else {
                 val = prefs.getString(key, "undef");
                 Log.d(TAG, "Caught pref " + key + " changing to " + val);
@@ -361,8 +353,9 @@ public class SLWallpaperService extends WallpaperService {
 
         private void add_speckles() {
             double intensity = 1.0;
-            float count = 200f * (width * height) / (128 * 128);
-            count *= (7.0f / inner_radius) * (7.0f / inner_radius);
+//            float count = 200f * (width * height) / (128 * 128);
+//            count *= (7.0f / inner_radius) * (7.0f / inner_radius);
+            double count = width * height / (outer_radius * 2) / (outer_radius * 2);
             int icount = (int)count;
 //            icount = 10;
 
@@ -371,7 +364,7 @@ public class SLWallpaperService extends WallpaperService {
                 field[i] = 0.0;
             }
             Random random = new Random();
-            int radius = (int)inner_radius;
+            int radius = (int)outer_radius;
             for(int i=0; i<icount; i++) {
                 int r = random.nextInt(height - radius);
                 int c = random.nextInt(width - radius);
@@ -389,20 +382,31 @@ public class SLWallpaperService extends WallpaperService {
             frame_delay = Integer.parseInt(prefs.getString("frame_delay", "1000"));
             scale = Integer.parseInt(prefs.getString("scale", "4"));
             inner_radius = Integer.parseInt(prefs.getString("inner_radius", "7"));
+            dt = Double.parseDouble(prefs.getString("timestep", "0.2"));
+            Boolean is_smooth_timestepping = prefs.getBoolean("smooth_timestepping", false);
+            if (!is_smooth_timestepping) {
+                dt = -1;
+            }
             outer_radius = inner_radius*3;
             width = actual_width / scale;
             height = actual_height / scale;
-            if(force || last_width != width || last_height != height) {
+            if(force || last_width != width || last_height != height || last_dt != dt) {
                 delete_plans();
                 make_plans();
                 field = new double[width * height];
                 pixels = new int[width * height];
                 multipliers = new Multipliers(height, width, inner_radius, outer_radius);
-                rules = new Rules();
+                if (is_smooth_timestepping) {
+                    rules = new SmoothTimestepRules();
+                }
+                else {
+                    rules = new Rules();
+                }
                 rules.precalculate(512);
                 add_speckles();
                 last_width = width;
                 last_height = height;
+                last_dt = dt;
                 bitmap = new Bitmap[2];
                 bitmap[0] = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                 bitmap[1] = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -546,7 +550,7 @@ public class SLWallpaperService extends WallpaperService {
             }
 
 
-            rules.s_fast(field, n_buffer, m_buffer);
+            rules.s_fast(field, n_buffer, m_buffer, dt);
 
         }
 
@@ -650,6 +654,7 @@ public class SLWallpaperService extends WallpaperService {
             for(int i=0; i<width*height; i++) {
                 sum += field[i];
             }
+//            Log.d(TAG, "Sum is: " + String.valueOf((int)sum));
             if(sum < 10) {
                 Log.d(TAG, "Grid is dead. Reseeding");
                 add_speckles();
@@ -697,7 +702,7 @@ public class SLWallpaperService extends WallpaperService {
                 frame_millis_sum += System.currentTimeMillis() - etime;
                 if(frame_counter++ % 32 == 0) {
                     long avg = frame_millis_sum / 32;
-                    long fps = 1000 / avg;
+                    long fps = avg>0L ? 1000 / avg : 0L;
                     Log.d(TAG, "Avg time per frame: " + avg + ", fps: " + fps);
                     frame_millis_sum = 0;
                 }

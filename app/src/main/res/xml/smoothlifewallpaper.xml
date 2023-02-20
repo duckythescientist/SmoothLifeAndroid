@@ -3,4 +3,4 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:thumbnail="@mipmap/ic_launcher"
     android:description="@string/app_name"
-    android:settingsActivity="ninja.duck.smoothlife.SLPreferencesActivity"/>
+    android:settingsActivity="ninja.duck.smoothlife.SettingsActivity"/>

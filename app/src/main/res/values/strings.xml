@@ -1,14 +1,33 @@
 <resources>
     <string name="app_name">SmoothLife</string>
-    <string name="title_activity_slpreferences">SmoothLife Preferences</string>
-    <string name="title_activity_set_wallpaper">SmoothLife</string>
-    <string name="reset_defaults">reset_defaults</string>
-    <string name="title_activity_about_page">AboutPage</string>
-
-    <string name="about_smoothlife">
-        SmoothLife is a generalization of Conway\'s Game of Life to a continuous domain originally
+    <string name="about_smoothlife"> SmoothLife is a generalization of Conway\'s Game of Life to a continuous domain originally
         presented in a research paper by Stephen Rafler:\nhttps://arxiv.org/abs/1111.1567\n\nThere are many implementations, but this one is (one of) mine. If you are so inclined,
         I have a Python implementation here:\nhttps://github.com/duckythescientist/SmoothLife\n\n
         The source for this app can be found at https://github.com/duckythescientist/SmoothLifeAndroid
     </string>
+    <string name="title_activity_slpreferences">SLPreferencesActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
