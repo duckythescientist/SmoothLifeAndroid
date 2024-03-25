@@ -9,7 +9,7 @@ I'm writing a series of blog posts about this app in case people want to know ab
 
 I also have a [Python version with explanations](https://github.com/duckythescientist/SmoothLife) that's a lot easier to read.
 
-Check the [release](https://github.com/duckythescientist/SmoothLifeAndroid/tree/master/release) folder for compiled APKs if you don't want to use the Play Store.
+Check the [releases](https://github.com/duckythescientist/SmoothLifeAndroid/releases) for compiled APKs if you don't want to use the Play Store.
 
 
 ## Explanation for the nerds:
@@ -45,3 +45,5 @@ Because of some weird things with wallpapers and how this app works, the app wil
 * Color Scaling: Turn down to have a smoother transition between colors. Turn up to have a sharp transition. There's a slight performance boost if you select exactly 50.
 * Scale: How much to zoom in compared to your native resolution. Small numbers can impact performance.
 * Cell Inner Radius: This is the "ri" value from the research paper. I can be interesting to play with but usually should be left alone.
+* Smooth Timestepping: Use smooth instead of discrete timestepping.
+* Timestep: For smooth timestepping, the timestep factor. Should be between 0 and 1. 0.2 is good.
