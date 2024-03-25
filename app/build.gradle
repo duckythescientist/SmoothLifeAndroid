@@ -10,8 +10,8 @@ android {
         applicationId "ninja.duck.smoothlife"
         minSdk 24
         targetSdk 33
-        versionCode 2001
-        versionName "2.0"
+        versionCode 2003
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
