@@ -3,13 +3,11 @@
 
 This is a Live Wallpaper that makes some really pretty patterns. There's cool math behind it.
 
-Please visit [SmoothLife on Google Play](https://play.google.com/store/apps/details?id=ninja.duck.smoothlife).
+~Please visit [SmoothLife on Google Play](https://play.google.com/store/apps/details?id=ninja.duck.smoothlife).~ Google sucks. Check the [releases](https://github.com/duckythescientist/SmoothLifeAndroid/releases) for compiled APKs. I'll hopefully get this on Fdroid eventually.
 
 I'm writing a series of blog posts about this app in case people want to know about the internals. Find that here: [duckythescientist.github.io](https://duckythescientist.github.io/)
 
 I also have a [Python version with explanations](https://github.com/duckythescientist/SmoothLife) that's a lot easier to read.
-
-Check the [releases](https://github.com/duckythescientist/SmoothLifeAndroid/releases) for compiled APKs if you don't want to use the Play Store.
 
 
 ## Explanation for the nerds:
